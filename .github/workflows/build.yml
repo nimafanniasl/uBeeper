@@ -2,8 +2,6 @@ name: Build and Release
 
 on:
   push:
-    # branches:
-    #   - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -29,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt --yes install docker.io adb git python3 pipx python3-setuptools
+          sudo apt --yes install adb git python3 pipx python3-setuptools
           pipx install clickable-ut
           clickable setup
 
