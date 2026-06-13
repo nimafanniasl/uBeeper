@@ -1,0 +1,15 @@
+{
+    "name": "com.smartnima.ubeeper",
+    "description": "All your chats in one place",
+    "architecture": "@CLICK_ARCH@",
+    "title": "uBeeper",
+    "hooks": {
+        "beeper": {
+            "apparmor": "beeper.apparmor",
+            "desktop":  "beeper.desktop"
+        }
+    },
+    "version": "1.0",
+    "maintainer": "Nima Fanniasl <nma.fanniasl@gmail.com>",
+    "framework" : "@CLICK_FRAMEWORK@"
+}

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=uBeeper
+GenericName=Unified Messenger
+Comment=The ultimate messaging app 
+Terminal=false
+Exec=./beeper.wrapper %U
+Icon=./usr/share/icons/hicolor/512x512/apps/beepertexts.png
+Terminal=false
+X-Ubuntu-Touch=true
+X-Ubuntu-Splash-Color=#FFFFFF
+StartupWMClass=Beeper
+X-AppImage-Version=4.2.923
+MimeType=x-scheme-handler/beeper;
+Categories=Network;
