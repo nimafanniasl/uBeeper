@@ -6,7 +6,7 @@ export PATH=$PWD/bin:$PATH
 # This is ridiculous
 wsf=$HOME/.cache/lomiri/windowstatestorage.sqlite
 if [ -f "$wsf" ]; then
-    sqlite3 "$wsf" "delete from state where windowId like 'codium.vscodium.com_code';"
+    sqlite3 "$wsf" "delete from state where windowId like 'com.smartnima.ubeeper';"
 fi
 
-exec ./AppRun --no-sandbox --ozone-platform=wayland "$@"
+exec ./beeper --no-sandbox --ozone-platform=wayland "$@"

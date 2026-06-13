@@ -1,0 +1,65 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Get version
+        run: |
+            VERSION="${GITHUB_REF_NAME#v}"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          apt --yes install docker.io adb git python3 pipx python3-setuptools
+          pipx install clickable-ut
+          clickable setup
+
+      - name: Build click file
+        run: |
+          clickable build --arch arm64 --skip-review
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+          path: build/aarch64-linux-gnu/app/com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+
+  create-release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+
+      - name: Create Version Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+          draft: false
+          prerelease: false
+          generate_release_notes: true
