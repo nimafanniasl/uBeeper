@@ -29,7 +29,7 @@ jobs:
         run: |
           sudo apt --yes install adb git python3 pipx python3-setuptools
           pipx install clickable-ut
-          clickable setup
+          clickable setup --arch arm64 --non-interactive
 
       - name: Build click file
         run: |
