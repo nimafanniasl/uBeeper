@@ -20,11 +20,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Get version
-        run: |
-            VERSION="${GITHUB_REF_NAME#v}"
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Install dependencies
         run: |
           sudo apt --yes install adb git python3 pipx python3-setuptools
@@ -35,29 +30,19 @@ jobs:
         run: |
           clickable build --arch arm64 --skip-review
 
-      - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
-          path: build/aarch64-linux-gnu/app/com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
-
-  create-release:
-    needs: [build]
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    permissions:
-      contents: write
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+      - name: Find click file
+        run: |
+          CLICK_FILE=$(find build -name "*.click" | head -n 1)
+          if [ -z "$CLICK_FILE" ]; then
+              echo "No .click file found!"
+              exit 1
+          fi
+          echo "CLICK_FILE=$CLICK_FILE" >> "$GITHUB_ENV"
 
       - name: Create Version Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            com.smartnima.ubeeper_${{ env.VERSION }}_arm64.click
+          files: ${{ env.CLICK_FILE }}
           draft: false
           prerelease: false
           generate_release_notes: true
